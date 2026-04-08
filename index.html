@@ -416,11 +416,9 @@ function updateDateTime() {
 
 // ── WEATHER ───────────────────────────────────────────────
 function fetchWeather(slot) {
-  var idx  = (slot === 1) ? city1Idx : city2Idx;
-  var city = CITIES[idx];
-  var url  = 'https://api.open-meteo.com/v1/forecast?latitude=' + city.lat +
-             '&longitude=' + city.lon + '&current_weather=true';
-  var xhr  = new XMLHttpRequest();
+  var idx = (slot === 1) ? city1Idx : city2Idx;
+  var url = 'weather/city-' + idx + '.json';
+  var xhr = new XMLHttpRequest();
   xhr.open('GET', url, true);
   xhr.onreadystatechange = function () {
     if (xhr.readyState !== 4) return;
@@ -428,13 +426,18 @@ function fetchWeather(slot) {
       try {
         var cw   = JSON.parse(xhr.responseText).current_weather;
         var temp = Math.round(cw.temperature);
+        if (temp === null || temp !== temp) {
+          el('wx' + slot + '-temp').innerHTML = '--\u00B0';
+          el('wx' + slot + '-cond').innerHTML = 'ACTUALIZANDO';
+          return;
+        }
         el('wx' + slot + '-temp').innerHTML = temp + '\u00B0';
         el('wx' + slot + '-cond').innerHTML = WMO[cw.weathercode] || 'CLIMA';
       } catch (e) {
         el('wx' + slot + '-cond').innerHTML = 'ERROR';
       }
     } else {
-      el('wx' + slot + '-cond').innerHTML = 'SIN CONEXION';
+      el('wx' + slot + '-cond').innerHTML = 'SIN DATOS';
     }
   };
   xhr.send();

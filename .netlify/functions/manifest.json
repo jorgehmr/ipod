@@ -1,0 +1,1 @@
+{"functions":[{"bundler":"zisi","buildData":{"runtimeAPIVersion":1},"mainFile":"/Users/jhmr/ALIAS/personal/ipod/netlify/functions/weather.js","name":"weather","priority":10,"runtimeVersion":"nodejs24.x","path":"/Users/jhmr/ALIAS/personal/ipod/.netlify/functions/weather.zip","runtime":"js"}],"system":{"arch":"arm64","platform":"darwin"},"timestamp":1775615972002,"version":1}

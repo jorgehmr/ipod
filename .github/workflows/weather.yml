@@ -1,0 +1,36 @@
+name: Update Weather
+
+on:
+  schedule:
+    - cron: '*/15 * * * *'
+  workflow_dispatch:
+
+permissions:
+  contents: write
+
+jobs:
+  update:
+    runs-on: ubuntu-latest
+    steps:
+      - uses: actions/checkout@v4
+
+      - name: Fetch weather for all cities
+        run: |
+          curl -sf "https://api.open-meteo.com/v1/forecast?latitude=19.264&longitude=-99.540&current_weather=true"   > weather/city-0.json
+          curl -sf "https://api.open-meteo.com/v1/forecast?latitude=27.482&longitude=-109.930&current_weather=true" > weather/city-1.json
+          curl -sf "https://api.open-meteo.com/v1/forecast?latitude=19.4326&longitude=-99.1332&current_weather=true" > weather/city-2.json
+          curl -sf "https://api.open-meteo.com/v1/forecast?latitude=20.6597&longitude=-103.3496&current_weather=true" > weather/city-3.json
+          curl -sf "https://api.open-meteo.com/v1/forecast?latitude=25.6866&longitude=-100.3161&current_weather=true" > weather/city-4.json
+          curl -sf "https://api.open-meteo.com/v1/forecast?latitude=21.1619&longitude=-86.8515&current_weather=true"  > weather/city-5.json
+          curl -sf "https://api.open-meteo.com/v1/forecast?latitude=32.5149&longitude=-117.0382&current_weather=true" > weather/city-6.json
+          curl -sf "https://api.open-meteo.com/v1/forecast?latitude=19.2826&longitude=-99.6557&current_weather=true"  > weather/city-7.json
+          curl -sf "https://api.open-meteo.com/v1/forecast?latitude=19.0414&longitude=-98.2063&current_weather=true"  > weather/city-8.json
+          curl -sf "https://api.open-meteo.com/v1/forecast?latitude=20.9674&longitude=-89.5926&current_weather=true"  > weather/city-9.json
+
+      - name: Commit if changed
+        run: |
+          git config user.email "github-actions[bot]@users.noreply.github.com"
+          git config user.name "github-actions[bot]"
+          git add weather/
+          git diff --quiet --exit-code --cached || git commit -m "chore: weather $(date -u +'%H:%M UTC')"
+          git push
